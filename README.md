@@ -10,7 +10,7 @@ Test Repo for Voxelizing Point Clouds
 
 > git clone https://github.com/ShinSangJin-Capstone-Team/VoxelPro.git
 
-> cd Plugins/VoxelPro
+> cd VoxelPro
 
 > git remote update
 
