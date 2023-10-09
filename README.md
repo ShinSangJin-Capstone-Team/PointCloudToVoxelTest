@@ -5,16 +5,6 @@ Test Repo for Voxelizing Point Clouds
 
 ```
 > git clone --recurse-submodules https://github.com/ShinSangJin-Capstone-Team/PointCloudToVoxelTest.git
-
-> cd Plugins
-
-> git clone https://github.com/ShinSangJin-Capstone-Team/VoxelPro.git
-
-> cd VoxelPro
-
-> git remote update
-
-> git checkout -t origin/5.2
 ```
 
 우클릭 `PCLTest.uproject`, `Generate Visual Studio project files`.
