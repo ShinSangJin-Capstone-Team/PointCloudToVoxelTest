@@ -1,0 +1,3 @@
+[submodule "Plugins/Open3DUE5"]
+	path = Plugins/Open3DUE5
+	url = https://github.com/ShinSangJin-Capstone-Team/Open3DUE5Plugin.git
