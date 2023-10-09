@@ -7,4 +7,4 @@ Test Repo for Voxelizing Point Clouds
 
 Go to `Plugins/`.
 
-```git clone https://github.com/ShinSangJin-Capstone-Team/VoxelPluginLegacyPro.git```
+```git clone https://github.com/ShinSangJin-Capstone-Team/VoxelPro.git```
