@@ -14,7 +14,7 @@ Test Repo for Voxelizing Point Clouds
 
 > git remote update
 
-> git checkout -t origin/Marketplace-UE5
+> git checkout -t origin/5.2
 ```
 
 우클릭 `PCLTest.uproject`, `Generate Visual Studio project files`.
