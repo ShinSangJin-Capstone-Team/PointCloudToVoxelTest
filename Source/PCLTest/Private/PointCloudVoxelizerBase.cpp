@@ -35,7 +35,8 @@ void APointCloudVoxelizerBase::BeginPlay()
 {
 	Super::BeginPlay();
 	FOpen3DUE5Module* Plugin = FModuleManager::GetModulePtr<FOpen3DUE5Module>("Open3DUE5");
-	//Plugin->InitSensor();
+	
+	if (Plugin) Plugin->InitSensor();
 }
 
 bool APointCloudVoxelizerBase::Voxelize(
