@@ -5,3 +5,12 @@
 	path = Plugins/Voxel
 	url = https://github.com/ShinSangJin-Capstone-Team/VoxelPro.git
 	branch = 5.2
+[submodule "Plugins/AdvancedSteamSessions"]
+	path = Plugins/AdvancedSteamSessions
+	url = https://github.com/ShinSangJin-Capstone-Team/AdvancedSteamSessions.git
+[submodule "Plugins/VRExpansionPlugin"]
+	path = Plugins/VRExpansionPlugin
+	url = https://github.com/ShinSangJin-Capstone-Team/VRExpansionPlugin.git
+[submodule "Plugins/AdvancedSessions"]
+	path = Plugins/AdvancedSessions
+	url = https://github.com/ShinSangJin-Capstone-Team/AdvancedSessions.git

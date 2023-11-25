@@ -20,13 +20,6 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Kismet/KismetRenderingLibrary.h"
 
-THIRD_PARTY_INCLUDES_START
-#pragma push_macro("check")   // store 'check' macro current definition
-#undef check  // undef to avoid conflicts
-#include "open3d/Open3D.h"
-#pragma pop_macro("check")  // restore definition
-THIRD_PARTY_INCLUDES_END
-
 #include "Open3DUE5.h"
 
 // Sets default values
@@ -41,7 +34,8 @@ APointCloudVoxelizerBase::APointCloudVoxelizerBase()
 void APointCloudVoxelizerBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	FOpen3DUE5Module* Plugin = FModuleManager::GetModulePtr<FOpen3DUE5Module>("Open3DUE5");
+	//Plugin->InitSensor();
 }
 
 bool APointCloudVoxelizerBase::Voxelize(
