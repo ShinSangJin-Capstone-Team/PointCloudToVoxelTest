@@ -78,12 +78,12 @@ bool APointCloudVoxelizerBase::Voxelize(
 
 	FOpen3DUE5Module::VoxelizedArrFromPoints(RealPoints, (double)Settings.VoxelSize, VoxelFilledArr, RealSize);
 
-
+	/**
 	for (auto Voxel : VoxelFilledArr)
 	{
 		UE_LOG(LogClass, Warning, TEXT("Voxel at %s"), *Voxel.ToString())
 	}
-
+	//*/
 	UE_LOG(LogClass, Warning, TEXT("Size: %s"), *RealSize.ToString())
 
 	const auto Data = MakeVoxelShared<FVoxelDataAssetData>();
@@ -132,7 +132,7 @@ bool APointCloudVoxelizerBase::Voxelize(
 
 	Asset = NewObject<UVoxelDataAsset>(GetTransientPackage());
 	Asset->bSubtractiveAsset = bSubtractive;
-	Asset->PositionOffset = PositionOffset;
+	Asset->PositionOffset = -RealSize/(2 * RealSettings.VoxelSize);
 	Asset->SetData(Data);
 
 	return true;
