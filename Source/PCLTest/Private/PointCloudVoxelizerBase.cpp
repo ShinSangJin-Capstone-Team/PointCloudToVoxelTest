@@ -138,6 +138,19 @@ bool APointCloudVoxelizerBase::Voxelize(
 	return true;
 }
 
+TArray<FVector> APointCloudVoxelizerBase::GetOneFrameFromSensor()
+{
+	TArray<FVector> Points = {};
+
+	FOpen3DUE5Module* Plugin = FModuleManager::GetModulePtr<FOpen3DUE5Module>("Open3DUE5");
+
+	Plugin->GetSensorOneFrame(Points);
+
+	//Voxelize();
+
+	return Points;
+}
+
 // Called every frame
 void APointCloudVoxelizerBase::Tick(float DeltaTime)
 {

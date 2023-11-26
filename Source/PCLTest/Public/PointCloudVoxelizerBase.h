@@ -28,6 +28,9 @@ protected:
 		FVoxelMeshImporterSettingsBase Settings,
 		UVoxelDataAsset*& Asset);
 
+	UFUNCTION(BlueprintCallable, Category = "Get 1 Frame Sensor Data", meta = (WorldContext = "WorldContextObject"))
+	static TArray<FVector> GetOneFrameFromSensor();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
