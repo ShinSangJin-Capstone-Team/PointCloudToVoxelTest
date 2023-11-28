@@ -69,9 +69,10 @@ bool APointCloudVoxelizerBase::Voxelize(
 
 	TArray<FVector3f> RealPoints = {};
 
-	for (auto APoint : Points)
+	FVector TransformedPoint;
+	for (auto& APoint : Points)
 	{
-		auto TransformedPoint = Transform.TransformPosition(FVector(APoint));
+		TransformedPoint = Transform.TransformPosition(FVector(APoint));
 
 		RealPoints.Add(FVector3f(TransformedPoint));
 	}
@@ -91,13 +92,14 @@ bool APointCloudVoxelizerBase::Voxelize(
 	auto RealSettings = FVoxelMeshImporterSettings(Settings);
 
 	FBox Box(ForceInit);
-	for (auto& Point : Points)
+	FVector Origin = Transform.TransformPosition(FVector::Zero());
+	for (auto& Point : RealPoints)
 	{
-		const auto PointDouble = FVector(Point.X, Point.Y, Point.Z);
+		const auto PointDouble = FVector(Point.X, Point.Y, Point.Z) - Origin;
 		//Vertices.Add(NewVertex);
 		Box += PointDouble;
 	}
-	Box = Box.ExpandBy(Settings.VoxelSize);
+	//Box = Box.ExpandBy(Settings.VoxelSize);
 
 	if (int64(RealSize.X) * int64(RealSize.Y) * int64(RealSize.Z) >= MAX_int32)
 	{
@@ -110,9 +112,9 @@ bool APointCloudVoxelizerBase::Voxelize(
 		return false;
 	}
 
-	auto OutOffset = FVoxelUtilities::RoundToInt(Box.Min / RealSettings.VoxelSize);
+	auto OutOffset = FVoxelUtilities::RoundToInt(Box.Min/ RealSettings.VoxelSize);
 
-	(*Data).SetSize(FIntVector(RealSize.X, RealSize.Y, RealSize.Z), false);
+	Data->SetSize(FIntVector(RealSize.X, RealSize.Y, RealSize.Z), false);
 
 	for (int32 X = 0; X < RealSize.X; X++)
 	{
@@ -120,19 +122,23 @@ bool APointCloudVoxelizerBase::Voxelize(
 		{
 			for (int32 Z = 0; Z < RealSize.Z; Z++)
 			{
-				(*Data).SetValue(X, Y, Z, FVoxelValue::Empty());
+				Data->SetValue(X, Y, Z, FVoxelValue::Empty());
 			}
 		}
 	}
 
-	for (auto AVoxelLocation : VoxelFilledArr)
+	for (auto& AVoxelLocation : VoxelFilledArr)
 	{
-		(*Data).SetValue(AVoxelLocation.X, AVoxelLocation.Y, AVoxelLocation.Z, FVoxelValue::Full());
+		if (AVoxelLocation.X > RealSize.X || AVoxelLocation.Y > RealSize.Y || AVoxelLocation.Z > RealSize.Z)
+		{
+			UE_LOG(LogClass, Warning, TEXT("Something is wrong!"));
+		}
+		Data->SetValue(AVoxelLocation.X, AVoxelLocation.Y, AVoxelLocation.Z, FVoxelValue::Full());
 	}
 
 	Asset = NewObject<UVoxelDataAsset>(GetTransientPackage());
 	Asset->bSubtractiveAsset = bSubtractive;
-	Asset->PositionOffset = -RealSize/(2 * RealSettings.VoxelSize);
+	Asset->PositionOffset = OutOffset; // -RealSize / (2 * RealSettings.VoxelSize);
 	Asset->SetData(Data);
 
 	return true;
