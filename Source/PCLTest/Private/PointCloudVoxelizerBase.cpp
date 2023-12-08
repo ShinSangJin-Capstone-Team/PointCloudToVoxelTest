@@ -37,6 +37,8 @@ void APointCloudVoxelizerBase::BeginPlay()
 	FOpen3DUE5Module* Plugin = FModuleManager::GetModulePtr<FOpen3DUE5Module>("Open3DUE5");
 	
 	if (Plugin) Plugin->InitSensor();
+	ReleaseSensorMemoryDelegate.BindUFunction(this, TEXT("ReleaseSensorMemory"));
+	OnEndPlay.Add(ReleaseSensorMemoryDelegate);
 }
 
 bool APointCloudVoxelizerBase::Voxelize(
@@ -142,6 +144,13 @@ bool APointCloudVoxelizerBase::Voxelize(
 	Asset->SetData(Data);
 
 	return true;
+}
+
+void APointCloudVoxelizerBase::ReleaseSensorMemory(AActor* DestroyedActor, EEndPlayReason::Type EndPlayReason)
+{
+	FOpen3DUE5Module* Plugin = FModuleManager::GetModulePtr<FOpen3DUE5Module>("Open3DUE5");
+
+	Plugin->CleanUpSensorHPS();
 }
 
 TArray<FVector> APointCloudVoxelizerBase::GetOneFrameFromSensor()
