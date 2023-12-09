@@ -34,7 +34,7 @@ protected:
 	void ReleaseSensorMemory(AActor* DestroyedActor, EEndPlayReason::Type EndPlayReason);
 
 	UFUNCTION(BlueprintCallable, Category = "Get 1 Frame Sensor Data", meta = (WorldContext = "WorldContextObject"))
-	static TArray<FVector> GetOneFrameFromSensor();
+	static TArray<FVector> GetOneFrameFromSensor(float VoxelSize);
 
 public:	
 	// Called every frame

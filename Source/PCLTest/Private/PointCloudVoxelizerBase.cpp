@@ -41,6 +41,43 @@ void APointCloudVoxelizerBase::BeginPlay()
 	OnEndPlay.Add(ReleaseSensorMemoryDelegate);
 }
 
+bool VoxelSurroundedCheck(TVoxelSharedRef<FVoxelDataAssetData> Data, int X, int Y, int Z)
+{
+	int count = 1;
+	for (auto i = -1; i < 2; ++i)
+	{
+		for (auto j = -1; j < 2; ++j)
+		{
+			for (auto k = -1; k < 2; ++k)
+			{
+				if (Data->GetValue(X + i, Y + k, Z + k, FVoxelValue::Special()) == FVoxelValue::Full())
+				{
+					count++;
+				}
+			}
+		}
+	}
+
+	return count > 8;
+}
+
+void RemoveAdjutantVoxels(TVoxelSharedRef<FVoxelDataAssetData> Data, int X, int Y, int Z)
+{
+	for (auto i = -1; i < 2; ++i)
+	{
+		for (auto j = -1; j < 2; ++j)
+		{
+			for (auto k = -1; k < 2; ++k)
+			{
+				if (Data->IsValidIndex(X + i, Y + k, Z + k) && FMath::Abs(i) + FMath::Abs(j) + FMath::Abs(k) < 2)
+				{
+					Data->SetValue(X + i, Y + k, Z + k, FVoxelValue::Empty());
+				}
+			}
+		}
+	}
+}
+
 bool APointCloudVoxelizerBase::Voxelize(
 	UObject* WorldContextObject,
 	TArray<FVector3f> Points,
@@ -138,6 +175,31 @@ bool APointCloudVoxelizerBase::Voxelize(
 		Data->SetValue(AVoxelLocation.X, AVoxelLocation.Y, AVoxelLocation.Z, FVoxelValue::Full());
 	}
 
+	/**/
+	TArray<FVector> ToRemove = {};
+	for (auto temp = 0; temp < 1; ++temp)
+	{
+		for (int32 X = 0; X < RealSize.X; X++)
+		{
+			for (int32 Y = 0; Y < RealSize.Y; Y++)
+			{
+				for (int32 Z = 0; Z < RealSize.Z; Z++)
+				{
+					if (!VoxelSurroundedCheck(Data, X, Y, Z))
+					{
+						ToRemove.Add(FVector(X, Y, Z));
+					}
+				}
+			}
+		}
+
+		for (auto& Coord : ToRemove)
+		{
+			Data->SetValue(Coord.X, Coord.Y, Coord.Z, FVoxelValue::Empty());
+		}
+	}
+	//*/
+
 	Asset = NewObject<UVoxelDataAsset>(GetTransientPackage());
 	Asset->bSubtractiveAsset = bSubtractive;
 	Asset->PositionOffset = OutOffset; // -RealSize / (2 * RealSettings.VoxelSize);
@@ -153,17 +215,21 @@ void APointCloudVoxelizerBase::ReleaseSensorMemory(AActor* DestroyedActor, EEndP
 	Plugin->CleanUpSensorHPS();
 }
 
-TArray<FVector> APointCloudVoxelizerBase::GetOneFrameFromSensor()
+TArray<FVector> APointCloudVoxelizerBase::GetOneFrameFromSensor(float VoxelSize)
 {
 	TArray<FVector> Points = {};
+	TArray<FVector> CleanedUpPoints = {};
 
 	FOpen3DUE5Module* Plugin = FModuleManager::GetModulePtr<FOpen3DUE5Module>("Open3DUE5");
 
 	Plugin->GetSensorOneFrame(Points);
 
+	FOpen3DUE5Module::CleanUpRawData(Points, VoxelSize, CleanedUpPoints);
+
+	//UE_LOG(LogClass, Warning, TEXT("Cleaned Up! CleanedUpPoints First Value: %s"), *CleanedUpPoints[0].ToString());
 	//Voxelize();
 
-	return Points;
+	return CleanedUpPoints;
 }
 
 // Called every frame
