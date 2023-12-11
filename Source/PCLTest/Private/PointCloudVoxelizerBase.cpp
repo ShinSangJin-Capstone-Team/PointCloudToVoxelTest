@@ -58,7 +58,7 @@ bool VoxelSurroundedCheck(TVoxelSharedRef<FVoxelDataAssetData> Data, int X, int 
 		}
 	}
 
-	return count > 8;
+	return count > 5;
 }
 
 void RemoveAdjutantVoxels(TVoxelSharedRef<FVoxelDataAssetData> Data, int X, int Y, int Z)
@@ -74,6 +74,32 @@ void RemoveAdjutantVoxels(TVoxelSharedRef<FVoxelDataAssetData> Data, int X, int 
 					Data->SetValue(X + i, Y + k, Z + k, FVoxelValue::Empty());
 				}
 			}
+		}
+	}
+}
+
+void CleanUpAloneVoxels(TVoxelSharedRef<FVoxelDataAssetData> Data, int IterNum)
+{
+	TArray<FVector> ToRemove = {};
+	for (auto temp = 0; temp < IterNum; ++temp)
+	{
+		for (int32 X = 0; X < Data->GetSize().X; X++)
+		{
+			for (int32 Y = 0; Y < Data->GetSize().Y; Y++)
+			{
+				for (int32 Z = 0; Z < Data->GetSize().Z; Z++)
+				{
+					if (!VoxelSurroundedCheck(Data, X, Y, Z))
+					{
+						ToRemove.Add(FVector(X, Y, Z));
+					}
+				}
+			}
+		}
+
+		for (auto& Coord : ToRemove)
+		{
+			Data->SetValue(Coord.X, Coord.Y, Coord.Z, FVoxelValue::Empty());
 		}
 	}
 }
@@ -176,28 +202,7 @@ bool APointCloudVoxelizerBase::Voxelize(
 	}
 
 	/**/
-	TArray<FVector> ToRemove = {};
-	for (auto temp = 0; temp < 1; ++temp)
-	{
-		for (int32 X = 0; X < RealSize.X; X++)
-		{
-			for (int32 Y = 0; Y < RealSize.Y; Y++)
-			{
-				for (int32 Z = 0; Z < RealSize.Z; Z++)
-				{
-					if (!VoxelSurroundedCheck(Data, X, Y, Z))
-					{
-						ToRemove.Add(FVector(X, Y, Z));
-					}
-				}
-			}
-		}
-
-		for (auto& Coord : ToRemove)
-		{
-			Data->SetValue(Coord.X, Coord.Y, Coord.Z, FVoxelValue::Empty());
-		}
-	}
+	CleanUpAloneVoxels(Data, 2);
 	//*/
 
 	Asset = NewObject<UVoxelDataAsset>(GetTransientPackage());
