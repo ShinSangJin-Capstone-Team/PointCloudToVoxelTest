@@ -10,7 +10,8 @@
 	url = https://github.com/ShinSangJin-Capstone-Team/AdvancedSteamSessions.git
 [submodule "Plugins/VRExpansionPlugin"]
 	path = Plugins/VRExpansionPlugin
-	url = https://github.com/ShinSangJin-Capstone-Team/VRExpansionPlugin.git
+	url = https://github.com/mordentral/VRExpansionPlugin.git
+	branch = 5.2-Locked
 [submodule "Plugins/AdvancedSessions"]
 	path = Plugins/AdvancedSessions
 	url = https://github.com/ShinSangJin-Capstone-Team/AdvancedSessions.git
