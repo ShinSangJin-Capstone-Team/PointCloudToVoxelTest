@@ -8,7 +8,7 @@ public class PCLTest : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Open3DUE5", "Voxel" , "Open3D"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Open3DUE5", "Voxel" , "Open3D"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
