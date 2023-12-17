@@ -17,4 +17,4 @@
 	url = https://github.com/ShinSangJin-Capstone-Team/AdvancedSessions.git
 [submodule "Plugins/ALS-Community"]
 	path = Plugins/ALS-Community
-	url = https://github.com/dyanikoglu/ALS-Community
+	url = https://github.com/dyanikoglu/ALS-Community.git
